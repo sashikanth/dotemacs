@@ -1,0 +1,9 @@
+.hg/
+/.emacs.desktop
+/.emacs.desktop.lock
+/.hgignore
+auto-save-list/
+backups/
+/eshell/history
+/url/cookies
+/eshell/lastdir
