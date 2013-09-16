@@ -88,11 +88,11 @@
 (setq truncate-partial-width-windows nil)
 
 ;; Trailing whitespace is unnecessary
-(defvar whitespace-cleanup-on-save t)
-;; (setq whitespace-cleanup-on-save nil)
-(add-hook 'before-save-hook
-    (lambda ()
-    (if whitespace-cleanup-on-save (whitespace-cleanup))))
+;; (defvar whitespace-cleanup-on-save t)
+;; ;; (setq whitespace-cleanup-on-save nil)
+;; (add-hook 'before-save-hook
+;;     (lambda ()
+;;     (if whitespace-cleanup-on-save (whitespace-cleanup))))
 
 ;; Trash can support
 (setq delete-by-moving-to-trash t)
@@ -140,16 +140,16 @@
 
 (load "find-tags")
 
-;; Modify syntax entry
-(defun hbin-ruby-mode-init ()
-  (modify-syntax-entry ?? "w")
-  (modify-syntax-entry ?! "w"))
-(add-hook 'ruby-mode-hook 'hbin-ruby-mode-init)
+;; ;; Modify syntax entry
+;; (defun hbin-ruby-mode-init ()
+;;   (modify-syntax-entry ?? "w")
+;;   (modify-syntax-entry ?! "w"))
+;; (add-hook 'ruby-mode-hook 'hbin-ruby-mode-init)
 
-(defun hbin-rhtml-mode-init ()
-  (modify-syntax-entry ?? "w")
-  (modify-syntax-entry ?! "w"))
-(add-hook 'rhtml-mode-hook 'hbin-rhtml-mode-init)
+;; (defun hbin-rhtml-mode-init ()
+;;   (modify-syntax-entry ?? "w")
+;;   (modify-syntax-entry ?! "w"))
+;; (add-hook 'rhtml-mode-hook 'hbin-rhtml-mode-init)
 
 ;;; emacs Window switching shortcuts
 (global-set-key [s-left] 'windmove-left)
@@ -195,8 +195,9 @@
               ;(mode 16 16 :left :elide)
               ;" "
               ;(vc-status 16 16 :left)
-              " "
-              filename-and-process)))
+              ;" "
+              ;filename-and-process)))
+)))
 ;              (string-utils-pad filename-and-process (- buffer-width 30) 'right))))
 ;; Switching to ibuffer puts the cursor on the most recent buffer
 (defadvice ibuffer (around ibuffer-point-to-most-recent) ()
@@ -207,5 +208,46 @@
 (ad-activate 'ibuffer)
 
 ;;; Winner mode for undo redo of windo configurations
-(when (fboundp 'winner-mode)
-      (winner-mode 1))
+;; (when (fboundp 'winner-mode)
+;;       (winner-mode 1))
+
+
+(eval-after-load 'ruby-mode
+  '(progn
+     ;; Libraries
+     (require 'flymake)
+
+     ;; Invoke ruby with '-c' to get syntax checking
+     (defun flymake-ruby-init ()
+       (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                          'flymake-create-temp-inplace))
+              (local-file (file-relative-name
+                           temp-file
+                           (file-name-directory buffer-file-name))))
+         (list "ruby" (list "-c" local-file))))
+
+     (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
+     (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
+
+     (push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
+           flymake-err-line-patterns)
+
+     (add-hook 'ruby-mode-hook 'cabbage-flymake-init)
+
+     (add-hook 'ruby-mode-hook
+               (lambda ()
+                 (when (and buffer-file-name
+                            (file-writable-p
+                             (file-name-directory buffer-file-name))
+                            (file-writable-p buffer-file-name)
+                            (if (fboundp 'tramp-list-remote-buffers)
+                                (not (subsetp
+                                      (list (current-buffer))
+                                      (tramp-list-remote-buffers)))
+                              t))
+                   (local-set-key (kbd "C-c d")
+                                  'flymake-display-err-menu-for-current-line)
+                   (flymake-mode t))))))
+
+
+(global-set-key (kbd "C-c g s") 'magit-status) ; Alt+a
