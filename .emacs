@@ -250,4 +250,5 @@
                    (flymake-mode t))))))
 
 
-(global-set-key (kbd "C-c g s") 'magit-status) ; Alt+a
+(global-set-key (kbd "C-c g s") 'magit-status)
+(global-set-key (kbd "C-c s v") 'set-variable)
