@@ -1,5 +1,3 @@
-(add-to-list 'load-path "/Users/sashi/temp/helm")
-(require 'helm-config)
 (package-initialize)
 
 ;;; Load exec path from shell for mac
