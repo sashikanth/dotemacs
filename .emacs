@@ -250,3 +250,27 @@
 
 (global-set-key (kbd "C-c g s") 'magit-status)
 (global-set-key (kbd "C-c s v") 'set-variable)
+
+;; Auto pairing parens and quotes
+;; enable skeleton-pair insert globally
+(setq skeleton-pair t)
+;;(setq skeleton-pair-on-word t)
+(global-set-key (kbd "(") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "[") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "{") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "\"") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "\'") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "\`") 'skeleton-pair-insert-maybe)
+(global-set-key (kbd "<") 'skeleton-pair-insert-maybe)
+
+;; And deletion
+(defvar skeletons-alist
+      '((?\( . ?\))
+        (?\' . ?\')
+        (?\" . ?\")
+        (?[  . ?])
+        (?{  . ?})
+        (?$  . ?$)))
+(defadvice delete-backward-char (before delete-empty-pair activate)
+  (if (eq (cdr (assq (char-before) skeletons-alist)) (char-after))
+      (and (char-after) (delete-char 1))))
