@@ -18,9 +18,6 @@
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-(add-to-list 'package-archives
-     '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
 (require 'package)
 
 
@@ -31,9 +28,7 @@
 (eval-after-load "color-theme"
   '(progn
    (color-theme-initialize)
-   (color-theme-solarized-dark)))
-
-(set-default-font "Inconsolata-14")
+   (color-theme-solarized-light)))
 
 ;;; From:https://raw.github.com/rmm5t/dotfiles/master/emacs.d/rmm5t/global.el
 ;;; Generic emacs settings I cannot live without
@@ -255,6 +250,6 @@
 (require 'autopair)
 (autopair-global-mode) ;; enable autopair in all buffers
 
-
+(load "fonts.el")
 
 (message "* --[ Done loading .emacs ]--")
