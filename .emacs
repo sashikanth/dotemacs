@@ -122,27 +122,8 @@
   (describe-function last-command))
 
 ;;;
-(require 'rinari)
-(rinari-launch)
-
-;;;
 (require 's)
 (require 'etags-select)
-
-;;; For proper ruby tags support
-
-(load "find-tags")
-
-;; ;; Modify syntax entry
-;; (defun hbin-ruby-mode-init ()
-;;   (modify-syntax-entry ?? "w")
-;;   (modify-syntax-entry ?! "w"))
-;; (add-hook 'ruby-mode-hook 'hbin-ruby-mode-init)
-
-;; (defun hbin-rhtml-mode-init ()
-;;   (modify-syntax-entry ?? "w")
-;;   (modify-syntax-entry ?! "w"))
-;; (add-hook 'rhtml-mode-hook 'hbin-rhtml-mode-init)
 
 ;;; emacs Window switching shortcuts
 (global-set-key [s-left] 'windmove-left)
@@ -204,52 +185,37 @@
 ;; (when (fboundp 'winner-mode)
 ;;       (winner-mode 1))
 
-
-(eval-after-load 'ruby-mode
-  '(progn
-     ;; Libraries
-     (require 'flymake)
-
-     ;; Invoke ruby with '-c' to get syntax checking
-     (defun flymake-ruby-init ()
-       (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                          'flymake-create-temp-inplace))
-              (local-file (file-relative-name
-                           temp-file
-                           (file-name-directory buffer-file-name))))
-         (list "ruby" (list "-c" local-file))))
-
-     (push '(".+\\.rb$" flymake-ruby-init) flymake-allowed-file-name-masks)
-     (push '("Rakefile$" flymake-ruby-init) flymake-allowed-file-name-masks)
-
-     (push '("^\\(.*\\):\\([0-9]+\\): \\(.*\\)$" 1 2 nil 3)
-           flymake-err-line-patterns)
-
-     (add-hook 'ruby-mode-hook 'cabbage-flymake-init)
-
-     (add-hook 'ruby-mode-hook
-               (lambda ()
-                 (when (and buffer-file-name
-                            (file-writable-p
-                             (file-name-directory buffer-file-name))
-                            (file-writable-p buffer-file-name)
-                            (if (fboundp 'tramp-list-remote-buffers)
-                                (not (subsetp
-                                      (list (current-buffer))
-                                      (tramp-list-remote-buffers)))
-                              t))
-                   (local-set-key (kbd "C-c d")
-                                  'flymake-display-err-menu-for-current-line)
-                   (flymake-mode t))))))
+(defun set-tab-width (value)
+  "My first function to set tab width"
+  (interactive "nEnter new tab-width: ")
+  (setq tab-width value))
 
 
 (global-set-key (kbd "C-c g s") 'magit-status)
 (global-set-key (kbd "C-c s v") 'set-variable)
+(global-set-key (kbd "C-c s t") 'set-tab-width)
 
 ;; Autopair.el
 (require 'autopair)
 (autopair-global-mode) ;; enable autopair in all buffers
 
 (load "fonts.el")
+
+(require 'auto-complete-config)
+(ac-config-default)
+(setq ac-ignore-case nil)
+(add-to-list 'ac-modes 'enh-ruby-mode)
+(add-to-list 'ac-modes 'web-mode)
+
+(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.ru$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile$" . enh-ruby-mode))
+ 
+(add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
+
+(add-hook 'ebh-ruby-mode-hook 'robe-mode) 
 
 (message "* --[ Done loading .emacs ]--")
