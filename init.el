@@ -7,9 +7,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
- '(ecb-primary-secondary-mouse-buttons (quote mouse-1--C-mouse-1))
- '(ecb-tip-of-the-day nil)
-)
+ '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
+ '(ecb-source-path
+   (quote
+    ((#("/Users/sashi/zb1" 0 16
+        (help-echo "Mouse-2 toggles maximizing, mouse-3 displays a popup-menu"))
+      "zb1"))))
+ '(ecb-tip-of-the-day nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

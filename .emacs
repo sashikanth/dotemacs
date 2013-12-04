@@ -218,6 +218,7 @@
 
 (add-hook 'ebh-ruby-mode-hook 'robe-mode) 
 
+;; (require 'randomize_lines)
 
 (defun just-one-space-in-region (beg end)
   "replace all whitespace in the region with single spaces"
