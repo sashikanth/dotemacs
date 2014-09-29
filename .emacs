@@ -169,9 +169,9 @@
               ;(mode 16 16 :left :elide)
               ;" "
               ;(vc-status 16 16 :left)
-              ;" "
-              ;filename-and-process)))
-)))
+              " "
+              filename-and-process)))
+;)))
 ;              (string-utils-pad filename-and-process (- buffer-width 30) 'right))))
 ;; Switching to ibuffer puts the cursor on the most recent buffer
 (defadvice ibuffer (around ibuffer-point-to-most-recent) ()
@@ -201,11 +201,11 @@
 
 (load "fonts.el")
 
-(require 'auto-complete-config)
-(ac-config-default)
+; (require 'auto-complete-config)
+; (ac-config-default)
 (setq ac-ignore-case nil)
-(add-to-list 'ac-modes 'enh-ruby-mode)
-(add-to-list 'ac-modes 'web-mode)
+;; (add-to-list 'ac-modes 'enh-ruby-mode)
+;; (add-to-list 'ac-modes 'web-mode)
 
 (add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
@@ -216,7 +216,7 @@
  
 (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
 
-(add-hook 'ebh-ruby-mode-hook 'robe-mode) 
+;; (add-hook 'ebh-ruby-mode-hook 'robe-mode) 
 
 ;; (require 'randomize_lines)
 
@@ -229,5 +229,24 @@
       (goto-char (point-min))
       (while (re-search-forward "\\s-+" nil t)
         (replace-match " ")))))
+
+(defun put-file-name-on-clipboard ()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
+
+
+(require 'ecb)
+(setq ecb-layout-name "left15")
+(setq ecb-show-sources-in-directories-buffer 'always)
+
+(ecb-activate)
 
 (message "* --[ Done loading .emacs ]--")

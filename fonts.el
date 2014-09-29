@@ -1,2 +1,2 @@
 ;; Font sizes
-(set-default-font "Inconsolata 16")
+(set-default-font "Inconsolata 13")
