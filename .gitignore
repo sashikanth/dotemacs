@@ -7,3 +7,8 @@ backups/
 /eshell/history
 /url/cookies
 /eshell/lastdir
+ido.last
+semanticdb
+tramp
+.python-environments/
+ac-comphist.dat
